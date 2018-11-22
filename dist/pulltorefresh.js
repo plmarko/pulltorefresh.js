@@ -30,7 +30,10 @@
     onInit: function () {},
     onRefresh: function () { return location.reload(); },
     resistanceFunction: function (t) { return Math.min(1, t / 2.5); },
-    shouldPullToRefresh: function () { return !window.scrollY; },
+    shouldPullToRefresh: function() {
+      return typeof this.mainElement === 'string'
+        ? !document.querySelector(this.mainElement).scrollTop
+	: this.mainElement && !this.mainElement.scrollTop;},
   };
 
   var _methods = ['mainElement', 'ptrElement', 'triggerElement'];
@@ -322,6 +325,9 @@
 
       // remove handler from shared state
       _shared.handlers.splice(_handler.offset, 1);
+	  
+	  // reset state
+      _shared.state = 'pending';
     };
 
     return _handler;
